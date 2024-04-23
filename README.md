@@ -44,6 +44,14 @@ Test cases involve verifying the functionality of the web crawler, query process
    ![image](https://github.com/mfortelnyy/Gamayun/assets/78120259/2b2c05bc-f2c3-4764-8381-2792d338cdf6)
 
 4. Spelling Correction
+   crawl for 'war', 'missle', 'launch'
+   ![image](https://github.com/mfortelnyy/Gamayun/assets/78120259/5596ccb9-7f42-45bb-a1ba-ea2a1b0b2b2d)
+
+   misspelled query 'attck on cntry' but still returns relevant results due to spellchecker when constructing query vector
+   <img width="1069" alt="Screenshot 2024-04-23 at 6 59 56 AM" src="https://github.com/mfortelnyy/Gamayun/assets/78120259/4b223788-4904-45d8-98bf-7dcb9b6b0392">
+
+
+   
 
 
 ## Source Code
