@@ -8,9 +8,8 @@ import sys
 
 from nltk import PorterStemmer, WordNetLemmatizer, edit_distance
 from nltk.corpus import stopwords, wordnet
-from spellchecker import SpellChecker
 
-sys.path.append('/Users/maksym/CS429GoogleProject/webcrawler/webcrawler/utils')
+sys.path.append('/Users/maksym/Documents/GitHub/Gamayun/webcrawler/webcrawler/utils')
 
 app = Flask(__name__)
 
@@ -18,7 +17,7 @@ app = Flask(__name__)
 @app.route('/runspider', methods=['POST'])
 def run_spider():
     # Specify the path to the spider file
-    spider_file_path = '/Users/maksym/CS429GoogleProject/webcrawler/webcrawler/spiders/web_pull.py'
+    spider_file_path = '/Users/maksym/Documents/GitHub/Gamayun/webcrawler/webcrawler/spiders/web_pull.py'
 
     # Run the runspider command
     subprocess.run(['scrapy', 'runspider', spider_file_path])
@@ -39,10 +38,10 @@ def process_query():
     query = query_data['query']
     tokenized_query = tokenize_query(query)
 
-    #crawl docs to construct idfttdf
+    # crawl docs to construct idfttdf
     response = requests.post('http://localhost:5000/runspider')
 
-    #if crawling was succesfull
+    # if crawling was succesfull
     if response.status_code == 200:
         # load the inverted index from the pickled file
         unpickled = load_index("index.pkl")
@@ -52,8 +51,6 @@ def process_query():
         return jsonify({'results': retrieve_document_contents(ranked_results)}), 200
     else:
         return jsonify({'error': 'Failed to call runspider'}), 500
-
-
 
 
 # difference from doc tokenization is query spelling corrections
@@ -68,14 +65,15 @@ def tokenize_query(query):
         if word.lower() not in stopword and word.lower() not in punct:
             # stem and correct the query term
             token = ps.stem(word.lower())
-            corr_token = correct_spelling(token)
-            all_tokens.append(corr_token)
+            #corr_token = spell(token)
+            #all_tokens.append(corr_token)
+            all_tokens.append(token)
     return all_tokens
 
 
 def load_index(filename):
     print('unpickling index...')
-    with open('/Users/maksym/CS429GoogleProject/output/' + filename, "rb") as f:
+    with open('/Users/maksym/Documents/GitHub/Gamayun/output/' + filename, "rb") as f:
         index = pickle.load(f)
     return index
 
@@ -85,9 +83,8 @@ def vectorize_query(query_tokens, index):
     query_vector = {}
     # if stem of the term is present in the index then retrieve its tfidf score, else 0
     for qtoken in query_tokens:
-        correct_token = spell.correction(qtoken)
-        print(f"corrected q token: {correct_token}")
-        stem = ps.stem(correct_token)
+        print(f"corrected q token: {qtoken}")
+        stem = ps.stem(qtoken)
         if stem in index:
             query_vector[stem] = index[stem]
         else:
@@ -95,7 +92,7 @@ def vectorize_query(query_tokens, index):
     return query_vector
 
 
-def search(query_tokens, tfidf_index,  num_results=10):
+def search(query_tokens, tfidf_index, num_results=10):
     # stores the final docids-scores for ranked retrieval
     ranking = {}
 
@@ -122,7 +119,7 @@ def search(query_tokens, tfidf_index,  num_results=10):
             for doc_id, score in tfidf_index[q_term]:
                 if doc_id not in vector_length:
                     vector_length[doc_id] = 0
-                vector_length[doc_id] += score**2
+                vector_length[doc_id] += score ** 2
 
     # take square root of each square root sum
     for doc_id in vector_length:
@@ -130,10 +127,10 @@ def search(query_tokens, tfidf_index,  num_results=10):
 
     # divide by a corresponding document vector magnitude
     for doc_id in ranking:
-        ranking[doc_id] = ranking[doc_id]/vector_length[doc_id]
+        ranking[doc_id] = ranking[doc_id] / vector_length[doc_id]
 
     # sort the dictionary of ranked docs
-    return sorted(ranking.items(), key= lambda x: x[0], reverse=True)
+    return sorted(ranking.items(), key=lambda x: x[0], reverse=True)
 
 
 # chooses top 10 most relevant articles and returns them
@@ -144,48 +141,16 @@ def retrieve_document_contents(ranked_documents):
     for doc_id, score in ranked_documents:
         counter = counter + 1
         if doc_id < len(og_articles):
-            if(counter<12):
+            if counter < 12:
                 ret.append(og_articles[doc_id])
             else:
                 return ret
     return ret
 
 
-# spelling correction for query terms by finding min edit dist
-def correct_spelling(word):
-    lemma = WordNetLemmatizer().lemmatize(word)
-    # if word is already valid - return
-    if wordnet.synsets(lemma):
-        return word
-    suggestions = {}
-    for synset in wordnet.synsets(lemma):
-        for lemma_name in synset.lemma_names():
-            suggestions[lemma_name] = edit_distance(lemma_name, word)
-    if suggestions:
-        return min(suggestions, key=suggestions.get)
-    else:
-        return word  # dead end
-
-
-
-
-
-def spell_check(words):
-    spell = SpellChecker()
-    misspelled = spell.unknown(words)
-
-    corrections = {}
-    for word in misspelled:
-        # the most likely
-        corrections[word] = spell.correction(word)
-        # list of likely words
-        corrections[word + "_options"] = spell.candidates(word)
-    return corrections[0], corrections
-
-
 def load_original_articles():
     print('unpickling original articles')
-    with open('/Users/maksym/CS429GoogleProject/original/' + "orig_articles", "rb") as f:
+    with open('/Users/maksym/Documents/GitHub/Gamayun/original/' + "orig_articles", "rb") as f:
         articles = pickle.load(f)
     return articles
 

@@ -90,7 +90,7 @@ class Indexer:
 
     def pickle_index(self, filename):
         print('pickling index')
-        with open('/Users/maksym/CS429GoogleProject/output/' + filename, "wb") as f:
+        with open('/Users/maksym/Documents/GitHub/Gamayun/output/' + filename, "wb") as f:
             print(self.index)
             pickle.dump(self.index, f)
 
@@ -112,7 +112,7 @@ class Indexer:
 
     def load_index(self, filename):
         print('unpickling')
-        with open('/Users/maksym/webcrawler' + filename, "rb") as f:
+        with open('/Users/maksym/Documents/GitHub/Gamayun/output' + filename, "rb") as f:
             self.index = pickle.load(f)
 
     def word2vec_model(self, documents, vector_size=100, window=5, min_count=1, workers=4):

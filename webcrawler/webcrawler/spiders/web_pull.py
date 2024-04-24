@@ -24,9 +24,9 @@ class WebCrawler(scrapy.Spider):
     def start_requests(self):
         print('starting requests')
         urls = [
-            'https://newsapi.org/v2/everything?q=ChatGPT&sortBy=popularity&apiKey=37795d274a33458dafa80ff7ec8302cb',
             'https://newsapi.org/v2/everything?q=car&sortBy=popularity&apiKey=37795d274a33458dafa80ff7ec8302cb',
-            'https://newsapi.org/v2/everything?q=electric&sortBy=popularity&apiKey=37795d274a33458dafa80ff7ec8302cb',
+            'https://newsapi.org/v2/everything?q=house&sortBy=popularity&apiKey=37795d274a33458dafa80ff7ec8302cb',
+            'https://newsapi.org/v2/everything?q=tree&sortBy=popularity&apiKey=37795d274a33458dafa80ff7ec8302cb',
 
         ]
 
@@ -67,6 +67,6 @@ class WebCrawler(scrapy.Spider):
 
     def pickle_original_articles(self, articles):
         print('pickling original articles')
-        with open('/Users/maksym/CS429GoogleProject/original/' + "orig_articles", "wb") as f:
+        with open('/Users/maksym/Documents/GitHub/Gamayun/original/' + "orig_articles", "wb") as f:
             pickle.dump(self.articles, f)
 
