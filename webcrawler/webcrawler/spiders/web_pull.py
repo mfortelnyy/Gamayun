@@ -26,7 +26,7 @@ class WebCrawler(scrapy.Spider):
         urls = [
             'https://newsapi.org/v2/everything?q=car&sortBy=popularity&apiKey=37795d274a33458dafa80ff7ec8302cb',
             'https://newsapi.org/v2/everything?q=house&sortBy=popularity&apiKey=37795d274a33458dafa80ff7ec8302cb',
-            'https://newsapi.org/v2/everything?q=tree&sortBy=popularity&apiKey=37795d274a33458dafa80ff7ec8302cb',
+            'https://newsapi.org/v2/everything?q=news&sortBy=popularity&apiKey=37795d274a33458dafa80ff7ec8302cb',
 
         ]
 

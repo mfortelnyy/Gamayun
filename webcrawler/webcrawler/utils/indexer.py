@@ -112,7 +112,7 @@ class Indexer:
 
     def load_index(self, filename):
         print('unpickling')
-        with open('/Users/maksym/Documents/GitHub/Gamayun/output' + filename, "rb") as f:
+        with open('/Users/maksym/Documents/GitHub/Gamayun/output/' + filename, "rb") as f:
             self.index = pickle.load(f)
 
     def word2vec_model(self, documents, vector_size=100, window=5, min_count=1, workers=4):
